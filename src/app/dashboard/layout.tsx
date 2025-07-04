@@ -1,32 +1,29 @@
-import { ReactNode } from "react";
+"use client";
 
-import { cookies } from "next/headers";
-
-import { AppSidebar } from "@/app/dashboard/_components/sidebar/app-sidebar";
+import { ReactNode, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { getSidebarVariant, getSidebarCollapsible, getContentLayout } from "@/lib/layout-preferences";
 import { cn } from "@/lib/utils";
-
-import { LayoutControls } from "./_components/sidebar/layout-controls";
 import { ThemeSwitcher } from "./_components/sidebar/theme-switcher";
+import DashboardSidebarClient from "@/app/dashboard/_components/sidebar/DashboardSidebarClient";
+import Page from "@/app/dashboard/page";
+import { LTToken } from "../api/load/route";
 
-export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+export default function Layout({ children }: Readonly<{ children: ReactNode }>) {
 
-  const sidebarVariant = await getSidebarVariant();
-  const sidebarCollapsible = await getSidebarCollapsible();
-  const contentLayout = await getContentLayout();
+
+  // Client state for selected dashboard
+  const [selectedDashboard, setSelectedDashboard] = useState<LTToken | null>(null);
 
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar variant={sidebarVariant} collapsible={sidebarCollapsible} />
+    <SidebarProvider>
+      <DashboardSidebarClient
+        onSelectDashboard={setSelectedDashboard}
+        selectedDashboard={selectedDashboard}
+      />
       <SidebarInset
         className={cn(
-          contentLayout === "centered" && "!mx-auto max-w-screen-2xl",
-          // Adds right margin for inset sidebar in centered layout up to 113rem.
-          // On wider screens with collapsed sidebar, removes margin and sets margin auto for alignment.
+          "!mx-auto max-w-screen-2xl",
           "max-[113rem]:peer-data-[variant=inset]:!mr-2 min-[101rem]:peer-data-[variant=inset]:peer-data-[state=collapsed]:!mr-auto",
         )}
       >
@@ -37,12 +34,13 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
               <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
             </div>
             <div className="flex items-center gap-2">
-              <LayoutControls contentLayout={contentLayout} variant={sidebarVariant} collapsible={sidebarCollapsible} />
               <ThemeSwitcher />
             </div>
           </div>
         </header>
-        <div className="p-4 md:p-6">{children}</div>
+        <div className="p-4 md:p-6">
+          <Page selectedDashboard={selectedDashboard} />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

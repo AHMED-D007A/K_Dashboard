@@ -1,22 +1,6 @@
 import {
   ChartArea,
   History,
-  // Home,
-  // ChartPie,
-  // Grid2X2,
-  // ChartLine,
-  // ShoppingBag,
-  // BookA,
-  // Forklift,
-  // Mail,
-  // MessageSquare,
-  // Calendar,
-  // Kanban,
-  // ReceiptText,
-  // Users,
-  // Lock,
-  // Fingerprint,
-  // SquareArrowUpRight,
   type LucideIcon,
 } from "lucide-react";
 
@@ -43,27 +27,27 @@ export interface NavGroup {
   items: NavMainItem[];
 }
 
-export const sidebarItems: NavGroup[] = [
-  {
-    id: 1,
-    label: "Dashboards",
-    items: [
-      {
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: ChartArea,
-      },
-    ],
-  },
-  {
-    id: 2,
-    label: "History",
-    items: [
-      {
-        title: "History",
-        url: "/history",
-        icon: History,
-      },
-    ],
-  },
-];
+// export const sidebarItems: NavGroup[] = [
+//   {
+//     id: 1,
+//     label: "Dashboards",
+//     items: [
+//       // {
+//       //   title: "Dashboard",
+//       //   url: "/dashboard",
+//       //   icon: ChartArea,
+//       // },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     label: "History",
+//     items: [
+//       // {
+//       //   title: "History",
+//       //   url: "/history",
+//       //   icon: History,
+//       // },
+//     ],
+//   },
+// ];

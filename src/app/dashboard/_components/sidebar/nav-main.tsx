@@ -15,12 +15,21 @@ import { type NavGroup, type NavMainItem } from "@/navigation/sidebar/sidebar-it
 
 interface NavMainProps {
   readonly items: readonly NavGroup[];
+  onDashboardClick?: (dashboard: any) => void;
+  dashboards?: any[];
+  selectedDashboard?: any;
 }
 
-export function NavMain({ items }: NavMainProps) {
+export function NavMain({ items, onDashboardClick, dashboards, selectedDashboard }: NavMainProps) {
   const path = usePathname();
 
   const isItemActive = (url: string) => path === url;
+
+  // Only mark as active if dashboard id matches selectedDashboard.id
+  const isDashboardActive = (item: any, idx: number) => {
+    if (!selectedDashboard || !dashboards || !dashboards[idx]) return false;
+    return dashboards[idx].id === selectedDashboard.id;
+  };
 
   return (
     <>
@@ -29,10 +38,18 @@ export function NavMain({ items }: NavMainProps) {
           {group.label && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>}
           <SidebarGroupContent className="flex flex-col gap-2">
             <SidebarMenu>
-              {group.items.map((item) => (
+              {group.items.map((item, idx) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={isItemActive(item.url)}>
-                    <Link href={item.url}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={group.label === "Dashboards" ? isDashboardActive(item, idx) : false}
+                    onClick={() => {
+                      if (group.label === "Dashboards" && dashboards && dashboards[idx] && onDashboardClick) {
+                        onDashboardClick(dashboards[idx]);
+                      }
+                    }}
+                  >
+                    <Link href={item.url} scroll={false}>
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
                     </Link>

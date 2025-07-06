@@ -10,17 +10,12 @@ import Page from "@/app/dashboard/page";
 import { LTToken } from "../api/load/route";
 
 export default function Layout({ children }: Readonly<{ children: ReactNode }>) {
-
-
   // Client state for selected dashboard
   const [selectedDashboard, setSelectedDashboard] = useState<LTToken | null>(null);
 
   return (
     <SidebarProvider>
-      <DashboardSidebarClient
-        onSelectDashboard={setSelectedDashboard}
-        selectedDashboard={selectedDashboard}
-      />
+      <DashboardSidebarClient onSelectDashboard={setSelectedDashboard} selectedDashboard={selectedDashboard} />
       <SidebarInset
         className={cn(
           "!mx-auto max-w-screen-2xl",

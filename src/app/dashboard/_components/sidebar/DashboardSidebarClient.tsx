@@ -36,18 +36,22 @@ export default function DashboardSidebarClient({
           id: 1,
           label: "Dashboards",
           items: dashboards.map((d: LTToken) => ({
-            title: d.title + d.id,
+            title: d.title,
             url: `/dashboard`,
             icon: ChartArea,
             dashboard: d,
           })),
         },
-        {
-          id: 2,
-          label: "History",
-          items: [],
-        },
+        // {
+        //   id: 2,
+        //   label: "History",
+        //   items: [],
+        // },
       ]);
+      // Automatically select the first dashboard if none is selected
+      if (dashboards.length > 0 && !selectedDashboard) {
+        onSelectDashboard(dashboards[0]);
+      }
     } catch (e) {
       // handle error
     }

@@ -23,7 +23,7 @@ interface NavMainProps {
 export function NavMain({ items, onDashboardClick, dashboards, selectedDashboard }: NavMainProps) {
   const path = usePathname();
 
-  const isItemActive = (url: string) => path === url;
+  // const isItemActive = (url: string) => path === url;
 
   // Only mark as active if dashboard id matches selectedDashboard.id
   const isDashboardActive = (item: any, idx: number) => {
@@ -39,7 +39,7 @@ export function NavMain({ items, onDashboardClick, dashboards, selectedDashboard
           <SidebarGroupContent className="flex flex-col gap-2">
             <SidebarMenu>
               {group.items.map((item, idx) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={dashboards && dashboards[idx] ? dashboards[idx].id : idx}>
                   <SidebarMenuButton
                     asChild
                     isActive={group.label === "Dashboards" ? isDashboardActive(item, idx) : false}
@@ -51,7 +51,12 @@ export function NavMain({ items, onDashboardClick, dashboards, selectedDashboard
                   >
                     <Link href={item.url} scroll={false}>
                       {item.icon && <item.icon />}
-                      <span>{item.title}</span>
+                      <div>
+                        <div>{item.title}</div>
+                        {group.label === "Dashboards" && dashboards && dashboards[idx]?.id && (
+                          <div className="text-xs text-gray-400">{dashboards[idx].id}</div>
+                        )}
+                      </div>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

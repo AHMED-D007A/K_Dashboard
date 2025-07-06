@@ -26,15 +26,17 @@ export function ChartAreaInteractive({
     perStep: Record<string, Array<{ timestamp: number; value: number }>>;
     perVU: Record<string, Array<{ timestamp: number; value: number }>>;
   };
-  setChartHistory: (updater: (prev: {
-    overall: Array<{ timestamp: number; avg_latency: number }>;
-    perStep: Record<string, Array<{ timestamp: number; value: number }>>;
-    perVU: Record<string, Array<{ timestamp: number; value: number }>>;
-  }) => {
-    overall: Array<{ timestamp: number; avg_latency: number }>;
-    perStep: Record<string, Array<{ timestamp: number; value: number }>>;
-    perVU: Record<string, Array<{ timestamp: number; value: number }>>;
-  }) => void;
+  setChartHistory: (
+    updater: (prev: {
+      overall: Array<{ timestamp: number; avg_latency: number }>;
+      perStep: Record<string, Array<{ timestamp: number; value: number }>>;
+      perVU: Record<string, Array<{ timestamp: number; value: number }>>;
+    }) => {
+      overall: Array<{ timestamp: number; avg_latency: number }>;
+      perStep: Record<string, Array<{ timestamp: number; value: number }>>;
+      perVU: Record<string, Array<{ timestamp: number; value: number }>>;
+    },
+  ) => void;
 }) {
   const [view, setView] = React.useState<"overall" | "perStep" | "perVU">("overall");
 
@@ -53,11 +55,7 @@ export function ChartAreaInteractive({
     });
     const avg_latency = getAverage(allLatencies) / 1_000_000;
     // Per Step
-    const allSteps = Array.from(
-      new Set(
-        vuData.flatMap((vu) => vu.steps?.map((s) => s.step_name) || []),
-      ),
-    );
+    const allSteps = Array.from(new Set(vuData.flatMap((vu) => vu.steps?.map((s) => s.step_name) || [])));
     setChartHistory((prev) => {
       // Copy previous state for immutability
       const perStep: Record<string, Array<{ timestamp: number; value: number }>> = { ...prev.perStep };
@@ -188,7 +186,7 @@ export function ChartAreaInteractive({
           <ToggleGroup
             type="single"
             value={view}
-            onValueChange={v => v && setView(v as "overall" | "perStep" | "perVU")}
+            onValueChange={(v) => v && setView(v as "overall" | "perStep" | "perVU")}
             variant="outline"
             className="gap-2"
           >
@@ -202,15 +200,7 @@ export function ChartAreaInteractive({
         <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
           <AreaChart data={chartData}>
             <CartesianGrid vertical={false} />
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  indicator="line"
-                  hideLabel
-                />
-              }
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" hideLabel />} />
             {Object.keys(chartConfig).map((key) => (
               <Area
                 key={key}
@@ -241,15 +231,7 @@ export function ChartAreaInteractive({
                       height={undefined}
                       margin={{ top: 4, right: 8, left: 8, bottom: 4 }}
                     >
-                      <ChartTooltip
-                        cursor={false}
-                        content={
-                          <ChartTooltipContent
-                            indicator="dot"
-                            label={label}
-                          />
-                        }
-                      />
+                      <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" label={label} />} />
                       <Area
                         type="natural"
                         dataKey="value"

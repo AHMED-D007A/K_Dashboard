@@ -43,7 +43,12 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={sidebarItems} onDashboardClick={onDashboardClick} dashboards={dashboards} selectedDashboard={selectedDashboard} />
+        <NavMain
+          items={sidebarItems}
+          onDashboardClick={onDashboardClick}
+          dashboards={dashboards}
+          selectedDashboard={selectedDashboard}
+        />
       </SidebarContent>
     </Sidebar>
   );

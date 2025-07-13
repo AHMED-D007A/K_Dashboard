@@ -108,29 +108,37 @@ export function ChartAreaInteractive({
       }));
     } else if (view === "perStep") {
       const stepNames = Object.keys(chartHistory.perStep);
-      const length = Math.max(...stepNames.map((k) => chartHistory.perStep[k]?.length || 0));
-      return Array.from({ length }, (_, i) => {
-        const row: Record<string, number | undefined> = { timestamp: undefined };
+      // Collect all unique timestamps
+      const allTimestamps = Array.from(
+        new Set(
+          stepNames.flatMap((step) =>
+            (chartHistory.perStep[step] || []).map((pt) => pt.timestamp)
+          )
+        )
+      ).sort((a, b) => a - b);
+      return allTimestamps.map((timestamp) => {
+        const row: Record<string, number | undefined> = { timestamp };
         stepNames.forEach((step) => {
-          const pt = chartHistory.perStep[step]?.[i];
-          if (pt) {
-            row[step] = pt.value;
-            if (!row.timestamp) row.timestamp = pt.timestamp;
-          }
+          const pt = (chartHistory.perStep[step] || []).find((pt) => pt.timestamp === timestamp);
+          if (pt) row[step] = pt.value;
         });
         return row;
       });
     } else if (view === "perVU") {
       const vuIds = Object.keys(chartHistory.perVU);
-      const length = Math.max(...vuIds.map((k) => chartHistory.perVU[k]?.length || 0));
-      return Array.from({ length }, (_, i) => {
-        const row: Record<string, number | undefined> = { timestamp: undefined };
+      // Collect all unique timestamps across all VUs
+      const allTimestamps = Array.from(
+        new Set(
+          vuIds.flatMap((vu) =>
+            (chartHistory.perVU[vu] || []).map((pt) => pt.timestamp)
+          )
+        )
+      ).sort((a, b) => a - b);
+      return allTimestamps.map((timestamp) => {
+        const row: Record<string, number | undefined> = { timestamp };
         vuIds.forEach((vu) => {
-          const pt = chartHistory.perVU[vu]?.[i];
-          if (pt) {
-            row[vu] = pt.value;
-            if (!row.timestamp) row.timestamp = pt.timestamp;
-          }
+          const pt = (chartHistory.perVU[vu] || []).find((pt) => pt.timestamp === timestamp);
+          if (pt) row[vu] = pt.value;
         });
         return row;
       });

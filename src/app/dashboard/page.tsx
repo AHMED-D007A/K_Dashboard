@@ -6,6 +6,7 @@ import { DataTable } from "./_components/data-table";
 import { SectionCards } from "./_components/section-cards";
 import { vuReportSchema } from "./_components/schema";
 import { LTToken } from "../api/load/route";
+import { useDashboard } from "./context/DashboardContext";
 
 export type StepReport = {
   step_name: string;
@@ -24,7 +25,8 @@ export type VUReport = {
   steps: StepReport[];
 };
 
-export default function Page({ selectedDashboard }: { selectedDashboard: LTToken | null }) {
+export default function Page() {
+  const { selectedDashboard } = useDashboard();
   // Store data for all dashboards
   const [dashboardData, setDashboardData] = React.useState<Record<string, VUReport[]>>({});
   type ChartHistory = {

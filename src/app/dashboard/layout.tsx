@@ -1,17 +1,15 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "./_components/sidebar/theme-switcher";
 import DashboardSidebarClient from "@/app/dashboard/_components/sidebar/DashboardSidebarClient";
-import Page from "@/app/dashboard/page";
-import { LTToken } from "../api/load/route";
+import { DashboardProvider, useDashboard } from "./context/DashboardContext";
 
-export default function Layout({ children }: Readonly<{ children: ReactNode }>) {
-  // Client state for selected dashboard
-  const [selectedDashboard, setSelectedDashboard] = useState<LTToken | null>(null);
+function DashboardLayoutContent({ children }: { children: ReactNode }) {
+  const { selectedDashboard, setSelectedDashboard } = useDashboard();
 
   return (
     <SidebarProvider>
@@ -34,9 +32,17 @@ export default function Layout({ children }: Readonly<{ children: ReactNode }>) 
           </div>
         </header>
         <div className="p-4 md:p-6">
-          <Page selectedDashboard={selectedDashboard} />
+          {children}
         </div>
       </SidebarInset>
     </SidebarProvider>
+  );
+}
+
+export default function Layout({ children }: Readonly<{ children: ReactNode }>) {
+  return (
+    <DashboardProvider>
+      <DashboardLayoutContent>{children}</DashboardLayoutContent>
+    </DashboardProvider>
   );
 }
